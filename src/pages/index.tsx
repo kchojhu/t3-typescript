@@ -45,6 +45,16 @@ const Home: NextPage = () => {
             {hello.data ? hello.data.greeting : "Loading tRPC query..."}
           </p>
         </div>
+        <div>
+          <button>hre one</button>
+          <button>hre o</button>
+          <button>hre one</button>
+          <button>hre o</button>
+          <button>hre one</button>
+          <button>hre o</button>
+          <button>hre one</button>
+          <button>hre one</button>
+        </div>
       </main>
     </>
   );
