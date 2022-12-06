@@ -1,23 +1,47 @@
-import { FC } from "react";
-import BlogCard from "../../component/BlogCard";
+import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
+import { FC, useEffect, useState } from 'react';
+import BlogCard from '../component/BlogCard';
 
-interface Props {}
+export const getStaticProps = async () => {
+  const { dir }: PostApiResponse = await fetch(
+    'http://localhost:3000/api/posts'
+  ).then((data) => data.json());
 
-const Blogs: FC<Props> = () => {
+  return {
+    props: {
+      posts: dir,
+    },
+  };
+};
+
+interface PostApiResponse {
+  dir: { title: string; slug: string; meta: string }[];
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticProps>;
+
+const Blogs: NextPage<Props> = ({ posts = [] }) => {
+  // const { posts = [] } = props;
+  // const [posts, setPosts] = useState<{title: string, slug: string; meta: string}[]>([]);
+
+  // const fetchPosts = async () => {
+  //   setPosts((await fetch('/api/posts').then(data => data.json())).dir);
+  // }
+
+  // useEffect(() => {
+  //   fetchPosts()
+  // }, []);
+
   return (
-    <div className="mx-auto max-w-3xl p-5 space-y-5">
-      <BlogCard
-        title="This is my blog"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores iste deleniti aliquam aut ipsam maxime autem aliquid minus incidunt quae."
-      />
-      <BlogCard
-        title="This is my blog"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores iste deleniti aliquam aut ipsam maxime autem aliquid minus incidunt quae."
-      />
-      <BlogCard
-        title="This is my blog"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores iste deleniti aliquam aut ipsam maxime autem aliquid minus incidunt quae."
-      />
+    <div className="mx-auto max-w-3xl space-y-3 p-5">
+      {posts.map((post) => (
+        <BlogCard
+          key={post.slug}
+          title={post.title}
+          description={post.meta}
+          slug={post.slug}
+        />
+      ))}
     </div>
   );
 };
