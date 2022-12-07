@@ -1,22 +1,20 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import { FC, useEffect, useState } from 'react';
-import BlogCard from '../component/BlogCard';
+import { readPostInfo } from '../../../lib/helper';
+import { PostApiResponse } from '../../../utils/types';
+import BlogCard from '../../component/BlogCard';
 
 export const getStaticProps = async () => {
-  const { dir }: PostApiResponse = await fetch(
-    'http://localhost:3000/api/posts'
-  ).then((data) => data.json());
-
+  //   const { dir }: PostApiResponse = await fetch(
+  //     'http://localhost:3000/api/posts'
+  //   ).then((data) => data.json());
+  const dir: PostApiResponse = readPostInfo();
   return {
     props: {
       posts: dir,
     },
   };
-};
-
-interface PostApiResponse {
-  dir: { title: string; slug: string; meta: string }[];
-}
+};  
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 

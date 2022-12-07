@@ -48,24 +48,30 @@ interface IStaticProps extends ParsedUrlQuery {
 export const getStaticProps: GetStaticProps<{
   post: { content: string; title: string };
 }> = async (context) => {
-  const { params } = context;
-  const { postSlug } = params! as IStaticProps;
-
-  const filePathToRead = path.join(process.cwd(), 'posts/' + postSlug) + '.md';
-  const fileContent = fs.readFileSync(filePathToRead, { encoding: 'utf-8' });
-
-  const { compiledSource, frontmatter } = await serialize(fileContent, {
-    parseFrontmatter: true,
-  });
-
-  return {
-    props: {
-      post: {
-        content: compiledSource,
-        title: frontmatter!.title!,
+  try {
+    const { params } = context;
+    const { postSlug } = params! as IStaticProps;
+  
+    const filePathToRead = path.join(process.cwd(), 'posts/' + postSlug) + '.md';
+    const fileContent = fs.readFileSync(filePathToRead, { encoding: 'utf-8' });
+  
+    const { compiledSource, frontmatter } = await serialize(fileContent, {
+      parseFrontmatter: true,
+    });
+  
+    return {
+      props: {
+        post: {
+          content: compiledSource,
+          title: frontmatter!.title!,
+        },
       },
-    },
-  };
+    };  
+  } catch (error) {
+    return {
+      notFound: true
+    }
+  }
 };
 
 export default SinglePage;
